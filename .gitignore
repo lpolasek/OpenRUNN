@@ -2,3 +2,4 @@
 .pio
 .venv
 .vscode
+__pycache__

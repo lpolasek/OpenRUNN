@@ -2,6 +2,7 @@
 
 #include "TCRT5000.h"
 #include "BLE_RSC.h"
+#include "WebDashboard.h"
 
 const uint8_t SENSOR_PIN = 4;          // TCRT5000 output
 
@@ -33,6 +34,7 @@ float getSpeedMetersPerSecond(const TCRT5000Data& data) {
 
 TCRT5000 sensor(SENSOR_PIN, sensorDebounceMs());
 BLE_RSC bleRsc("OpenRUNN");
+WebDashboard webDashboard("OpenRUNN");
 
 void setup() {
   Serial.begin(115200);
@@ -41,17 +43,21 @@ void setup() {
 
   sensor.setup();
   bleRsc.setup();
+  webDashboard.setup();
 }
 
 void loop() {
   unsigned long nowMs = millis();
   TCRT5000Data data = sensor.getData();
+  float totalDistanceMeters = data.totalPulses * beltLengthMeters;
 
   if (bleRsc.isConnected() && (nowMs - lastRscNotificationMs) >= RSC_NOTIFICATION_INTERVAL_MS) {
     lastRscNotificationMs = nowMs;
-    float speedMetersPerSecond = getSpeedMetersPerSecond(data);
-    float totalDistanceMeters = data.totalPulses * beltLengthMeters;
-
-    bleRsc.notifyRscMeasurement(speedMetersPerSecond, 0, totalDistanceMeters);
+    float rscSpeedMetersPerSecond = getSpeedMetersPerSecond(data);
+    bleRsc.notifyRscMeasurement(rscSpeedMetersPerSecond, 0, totalDistanceMeters);
   }
+
+  float dashboardSpeedMetersPerSecond = getSpeedMetersPerSecond(data);
+  webDashboard.updateMetrics(dashboardSpeedMetersPerSecond, totalDistanceMeters);
+  webDashboard.loop();
 }

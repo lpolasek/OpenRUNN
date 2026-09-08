@@ -11,7 +11,7 @@ Connect the ESP32-C3 to the TCRT5000 module as follows:
 - GPIO 4 to `DO`
 - Leave `AO` disconnected
 
-![OpenRUNN TCRT5000 wiring diagram](assets/wiring.png)
+![OpenRUNN TCRT5000 wiring diagram](assets/images/wiring.png)
 
 The circuit is powered through the ESP32-C3 USB connector. The board supplies 3.3 V to the TCRT5000 module, so no separate power supply is required.
 
@@ -68,6 +68,42 @@ const float beltLengthMeters = 3.19f;        // Distance per valid sensor pulse
 ```
 
 After changing this value, build and upload the firmware again.
+
+## Web Dashboard
+
+The ESP32 creates an open Wi-Fi access point named `OpenRUNN`. Connect a phone or computer to that network, then open:
+
+```text
+http://192.168.4.1
+```
+
+![Web Dashboard](assets/images/web_dashboard.png)
+
+ The dashboard displays session distance, pace, and elapsed time. The ESP32 exposes only current sensor telemetry through `GET /api/status`; Start, Pause, Resume, Stop, and session accumulation are handled locally by JavaScript in the browser.
+
+Session values are not stored on the ESP32. Reloading or closing the dashboard page resets the current browser session.
+
+The editable web sources are located in `assets/web/`. During every PlatformIO build, `scripts/embed_web_assets.py` minifies the HTML, CSS, and JavaScript, compresses them with gzip, and embeds them in the firmware. Generated files remain inside `.pio/` and must not be edited or committed.
+
+### Local Development Server
+
+Run the dashboard locally with a simulated metrics API:
+
+```sh
+python scripts/dev_web_server.py
+```
+
+Open `http://127.0.0.1:8765`. The server continuously simulates the same `/api/status` telemetry provided by the ESP32, while the browser manages the session controls. The default simulated speed is 10 km/h; change it with:
+
+```sh
+python scripts/dev_web_server.py --speed-kph 12.5
+```
+
+To test from another device on the same network, bind to all interfaces and open the computer's local IP address from that device:
+
+```sh
+python scripts/dev_web_server.py --host 0.0.0.0
+```
 
 ## Build
 
@@ -137,10 +173,13 @@ pio run --target upload --environment esp32-c3-devkitm-1
 .
 |-- assets/
 |   |-- images/          # Project images and screenshots
+|   `-- web/             # Dashboard HTML, CSS, and JavaScript sources
 |-- platformio.ini       # PlatformIO project configuration
 |-- requirements.txt     # Python dependency for PlatformIO Core
+|-- scripts/             # Web asset build scripts
 `-- src/
     |-- main.cpp         # Application setup and main loop
     |-- BLE_RSC.cpp/.h   # Bluetooth Low Energy RSC service
+    |-- WebDashboard.cpp/.h # Wi-Fi access point and web dashboard
     `-- TCRT5000.cpp/.h  # Optical sensor and pulse measurement
 ```
