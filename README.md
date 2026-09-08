@@ -2,6 +2,27 @@
 
 OpenRUNN is an ESP32-C3 treadmill running sensor. It reads pulses from a TCRT5000 optical sensor and exposes speed and distance through the Bluetooth Low Energy Running Speed and Cadence (RSC) service.
 
+## Wiring
+
+Connect the ESP32-C3 to the TCRT5000 module as follows:
+
+- GND to `GND`
+- 3.3 V to `VCC`
+- GPIO 4 to `DO`
+- Leave `AO` disconnected
+
+![OpenRUNN TCRT5000 wiring diagram](assets/wiring.png)
+
+The circuit is powered through the ESP32-C3 USB connector. The board supplies 3.3 V to the TCRT5000 module, so no separate power supply is required.
+
+####  Important notes:
+
+- Power the TCRT5000 from 3.3 V, not 5 V, so its digital output remains safe for the ESP32-C3 GPIO.
+- The ESP32-C3 and sensor must share the same GND connection.
+- Disconnect USB power while changing the wiring.
+- Adjust the sensor module's potentiometer until `DO` changes state reliably once per belt marker. The module's digital indicator LED can be used while tuning the threshold.
+- Position the sensor close enough to the marker for reliable detection, while leaving enough clearance to prevent contact with the moving belt.
+
 ## Requirements
 
 - Python 3
@@ -114,6 +135,8 @@ pio run --target upload --environment esp32-c3-devkitm-1
 
 ```text
 .
+|-- assets/
+|   |-- images/          # Project images and screenshots
 |-- platformio.ini       # PlatformIO project configuration
 |-- requirements.txt     # Python dependency for PlatformIO Core
 `-- src/
