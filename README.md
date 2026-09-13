@@ -23,6 +23,30 @@ The circuit is powered through the ESP32-C3 USB connector. The board supplies 3.
 - Adjust the sensor module's potentiometer until `DO` changes state reliably once per belt marker. The module's digital indicator LED can be used while tuning the threshold.
 - Position the sensor close enough to the marker for reliable detection, while leaving enough clearance to prevent contact with the moving belt.
 
+## 3D Printed Enclosure (CAD)
+
+The enclosure parts can be 3D printed or modified online:
+
+- **Onshape CAD Project:** [OpenRUNN CAD on Onshape](https://cad.onshape.com/documents/b1faf20878b0b15aca3d2b67/w/d11ab869225999fb49bd0b1a/e/4259dc78c6a26a2227b742bb?renderMode=0&uiState=6aa6a6600716e97083dc4b1e)
+
+### Top Case
+
+Main enclosure housing the ESP32-C3 and TCRT5000 sensor.
+
+- **STL:** [assets/stl/top_case.stl](assets/stl/top_case.stl)
+- **STEP:** [assets/stl/top_case.step](assets/stl/top_case.step)
+
+![Top Case](assets/images/top_case.png)
+
+### Bottom Rail
+
+Mounting rail for securing the case to the treadmill frame.
+
+- **STL:** [assets/stl/bottom_rail.stl](assets/stl/bottom_rail.stl)
+- **STEP:** [assets/stl/bottom_rail.step](assets/stl/bottom_rail.step)
+
+![Bottom Rail](assets/images/bottom_rail.png)
+
 ## Requirements
 
 - Python 3
@@ -173,6 +197,7 @@ pio run --target upload --environment esp32-c3-devkitm-1
 .
 |-- assets/
 |   |-- images/          # Project images and screenshots
+|   |-- stl/             # 3D printable STL and STEP files
 |   `-- web/             # Dashboard HTML, CSS, and JavaScript sources
 |-- platformio.ini       # PlatformIO project configuration
 |-- requirements.txt     # Python dependency for PlatformIO Core
