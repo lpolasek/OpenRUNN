@@ -2,6 +2,10 @@
 
 OpenRUNN is an ESP32-C3 treadmill running sensor. It reads pulses from a TCRT5000 optical sensor and exposes speed and distance through the Bluetooth Low Energy Running Speed and Cadence (RSC) service.
 
+[![OpenRUNN flyer](assets/images/flyer.png)](https://www.instagram.com/openrunnok/)
+
+Follow the project on [Instagram](https://www.instagram.com/openrunnok/).
+
 ## Wiring
 
 Connect the ESP32-C3 to the TCRT5000 module as follows:
